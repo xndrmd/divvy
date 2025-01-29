@@ -1,5 +1,5 @@
 {
-  "name": "foobar",
+  "name": "divvy",
   "private": true,
   "scripts": {
     "build": "turbo build",
