@@ -1,0 +1,25 @@
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    hostname: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: divvy
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    hostname: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  pgdata:
