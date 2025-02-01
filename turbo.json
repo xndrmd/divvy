@@ -9,16 +9,10 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         ".env*"
-      ]
-    },
-    "web#build": {
+      ],
       "outputs": [
         ".next/**",
-        "!.next/cache/**"
-      ]
-    },
-    "api#build": {
-      "outputs": [
+        "!.next/cache/**",
         "dist"
       ]
     },
