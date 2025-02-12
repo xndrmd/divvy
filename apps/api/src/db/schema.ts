@@ -1,43 +1,133 @@
-import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgTable,
+  varchar,
+  numeric,
+  boolean,
+  date,
+  timestamp,
+  bytea,
+  text,
+} from "drizzle-orm/pg-core";
 
-export const category = pgTable("category", {
-  id: integer().primaryKey(),
-
+// 1. User
+export const User = pgTable("User", {
+  id: integer("id").primaryKey().autoincrement(),
+  username: varchar("username", { length: 30 }).notNull(),
+  password: varchar("password", { length: 50 }).notNull(),
 });
 
+// 2. Category
+export const Category = pgTable("Category", {
+  id: integer("id").primaryKey().autoincrement(),
+  name: varchar("name", { length: 50 }).notNull(),
+});
 
+// 3. Group
+export const Group = pgTable("Group", {
+  id: integer("id").primaryKey().autoincrement(),
+  name: varchar("name", { length: 50 }).notNull(),
+});
 
-/*
+// 4. Period
+export const Period = pgTable("Period", {
+  id: integer("id").primaryKey().autoincrement(),
+  group_id: integer("group_id")
+    .notNull()
+    .references(() => Group.id),
+  start_date: date("start_date").
+    notNull()
+    .defaultNow(),
+  end_date: date("end_date").notNull(),
+});
 
-category
-- id
-- name
-- 
+// 5. Expense
+export const Expense = pgTable("Expense", {
+  id: integer("id").primaryKey().autoincrement(),
+  name: varchar("name", { length: 50 }).notNull(),
+  date: timestamp()
+    .notNull()
+    .defaultNow(),
+  user_id: integer("user_id", {
+    comment: "The one who registered the expense",
+  })
+    .notNull()
+    .references(() => User.id),
+  period_id: integer("period_id")
+    .notNull()
+    .references(() => Period.id),
+  category_id: integer("category_id")
+    .notNull()
+    .references(() => Category.id),
+  amount: numeric("amount", { precision: 9, scale: 2 }).notNull(),
+  receipt: bytea("receipt"),
+  comment: text("comment"),
+});
 
-user
-- id
-- username
-- password
-# - email
+// 6. Contribution
+export const Contribution = pgTable("Contribution", {
+  expense_id: integer("expense_id")
+    .notNull()
+    .references(() => Expense.id),
+  user_id: integer("user_id", { comment: "Contributor" })
+    .notNull()
+    .references(() => User.id),
+  is_percentage: boolean("is_percentage").notNull(),
+  contribution_made: numeric("contribution_made", {
+    precision: 9,
+    scale: 2,
+  }).notNull(),
+  balance: numeric("balance", { precision: 9, scale: 2 }).notNull(),
+});
 
-group
-- id
-- name
+// 7. Debt
+export const Debt = pgTable("Debt", {
+  id: integer("id").primaryKey().autoincrement(),
+  user_id: integer("user_id")
+    .notNull()
+    .references(() => User.id),
+  period_id: integer("period_id")
+    .notNull()
+    .references(() => Period.id),
+  final_balance: numeric("final_balance", { precision: 9, scale: 2 }).notNull(),
+});
 
-user_group
-- user_id
-- group_id
-- is_admin
+// 8. Card
+export const Card = pgTable("Card", {
+  id: integer("id").primaryKey().autoincrement(),
+  user_id: integer("user_id", { comment: "owner" })
+    .notNull()
+    .references(() => User.id),
+  name: varchar("name", { length: 50 }).notNull(),
+  number: varchar("number", { length: 19, comment: "at least last 4" }),
+});
 
-expense
-- id
-- name
-- date
-- category_id
+// 9. User_Group
+export const User_Group = pgTable("User_Group", {
+  id: integer("id").primaryKey().autoincrement(),
+  user_id: integer("user_id")
+    .notNull()
+    .references(() => User.id),
+  group_id: integer("group_id")
+    .notNull()
+    .references(() => Group.id),
+  default_quota: numeric("default_quota", {
+    precision: 5,
+    scale: 2,
+    comment: "5 & 2 -> 100.00%",
+  }).notNull(),
+});
 
-group_expense
-- group_id
-- expense_id
-
-
-*/
+// 10. User_Group_Category
+export const User_Group_Category = pgTable("User_Group_Category", {
+  user_id: integer("user_id")
+    .notNull()
+    .references(() => User.id),
+  group_id: integer("group_id")
+    .notNull()
+    .references(() => Group.id),
+  category_id: integer("category_id")
+    .notNull()
+    .references(() => Category.id),
+  default_quota: numeric("default_quota", { precision: 5, scale: 2 }).notNull(),
+});
