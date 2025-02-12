@@ -4,7 +4,7 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -751.6666,
+    "scrollTop": -918.3333,
     "scrollLeft": -611,
     "zoomLevel": 0.76,
     "show": 431,
@@ -544,7 +544,7 @@
         "tableId": "RTQt_tgpiXbsXoZGmyZxJ",
         "name": "date",
         "comment": "",
-        "dataType": "date",
+        "dataType": "timestamp",
         "default": "",
         "options": 8,
         "ui": {
@@ -555,7 +555,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1738185769478,
+          "updateAt": 1739399102002,
           "createAt": 1738185763449
         }
       },
@@ -2202,7 +2202,7 @@
       -1,
       {
         "name": 1738185766503,
-        "dataType": 1738185768814,
+        "dataType": 1739399102002,
         "options(notNull)": 1738185769477
       }
     ],
